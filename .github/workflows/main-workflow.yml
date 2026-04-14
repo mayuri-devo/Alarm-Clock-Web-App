@@ -1,0 +1,13 @@
+name: Workflow for deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+    call-reusable-workflow:
+        uses: mayuri-devo/Alarm-Clock-Web-App/.github/workflows/reusable-workflow.yml@main
+        with:
+            node-version: '20'
+            deploy: true
+        

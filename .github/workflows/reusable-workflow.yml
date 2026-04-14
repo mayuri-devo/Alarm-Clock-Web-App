@@ -1,0 +1,38 @@
+name: react-alarm-app-reusable-workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+      deploy:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Composite Action
+        uses: mayuri-devo/github-actions/.github/actions/react-webapp-alarm@main
+        with:
+          node-version: ${{ inputs.node-version }}
+
+  deploy:
+    needs: build
+    if: ${{ inputs.deploy == true }}
+    runs-on: self-hosted
+
+    steps:
+      
+      - name: Deploy to Nginx
+        run: |
+          sudo rm -rf /var/www/html/*
+          sudo cp -r * /var/www/html/
+          sudo systemctl restart nginx
